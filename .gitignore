@@ -1,3 +1,5 @@
 .idea/
 .vscode/
 **/__pycache__/
+cache_db.sqlite
+cache_db.sqlite-journal

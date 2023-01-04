@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS Requests (
+    Request VARCHAR(256) PRIMARY KEY,
+    Response VARCHAR(8192)
+)
