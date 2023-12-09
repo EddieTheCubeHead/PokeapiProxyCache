@@ -5,16 +5,18 @@ import sqlite3
 
 API_URL = "https://pokeapi.co/api/v2"
 
-
 cache: dict[str, dict] = {}
 con = sqlite3.connect("cache_db.sqlite")
 
 
 def replace_urls(raw_request_data: dict) -> dict:
     for key in raw_request_data:
-        if type(raw_request_data[key]) == str:
-            raw_request_data[key] = raw_request_data[key].replace("https://pokeapi.co/api/v2", "http://localhost:8080")
-        elif type(raw_request_data[key]) == dict:
+        if type(raw_request_data[key]) is str:
+            raw_request_data[key] = raw_request_data[key].replace("https://pokeapi.co/api/v2", "http://127.0.0.1:8000")
+        elif type(raw_request_data[key]) is list:
+            for index, item in enumerate(raw_request_data[key]):
+                raw_request_data[key][index] = replace_urls(item)
+        elif type(raw_request_data[key]) is dict:
             raw_request_data[key] = replace_urls(raw_request_data[key])
     return raw_request_data
 
