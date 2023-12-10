@@ -5,7 +5,7 @@ import sqlite3
 
 API_URL = "https://pokeapi.co/api/v2"
 
-cache: dict[str, dict] = {}
+cache: dict[str, dict | list[dict]] = {}
 con = sqlite3.connect("cache_db.sqlite")
 
 
@@ -13,7 +13,8 @@ def replace_urls(raw_request_data: dict) -> dict:
     for key in raw_request_data:
         if type(raw_request_data[key]) is str:
             raw_request_data[key] = raw_request_data[key].replace("https://pokeapi.co/api/v2", "http://127.0.0.1:8000")
-        elif type(raw_request_data[key]) is list:
+        elif (type(raw_request_data[key]) is list and len(raw_request_data[key]) > 0
+              and type(raw_request_data[key][0]) is dict):
             for index, item in enumerate(raw_request_data[key]):
                 raw_request_data[key][index] = replace_urls(item)
         elif type(raw_request_data[key]) is dict:
@@ -37,7 +38,10 @@ def add_to_cache(request: str):
         print("Fetching from PokeAPI")
         data = requests.get(f"{API_URL}/{request}").json()
         add_to_database(request, data)
-    cache[request] = replace_urls(data)
+    if type(data) is list:
+        cache[request] = [replace_urls(item) for item in data]
+    else:
+        cache[request] = replace_urls(data)
 
 
 def get(request: str) -> dict:
