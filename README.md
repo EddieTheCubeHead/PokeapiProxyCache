@@ -5,6 +5,8 @@ Written to not stress pokeapi servers with requests while testing pokeapi for a 
 
 ## Running
 
+Please make sure you are using python 3.12!
+
 ### Create venv and install requirements
 
 If you are not using a tool like PyCharm that creates a venv for you automatically
